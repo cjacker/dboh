@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     base = 16;
   }
 
-  number = strtol(input, &next, base);
+  number = strtoul(input, &next, base);
 
   // if strtol failed
   if ((next == input) || (*next != '\0')) {
@@ -75,13 +75,30 @@ int main(int argc, char **argv)
   }
 
   printf("dec: %lu\n", number);
-  printf("hex: 0x%lx\n", number);
+
+  char * hex_str = malloc(16);
+
+  if(number <= 0xff) {
+    printf("hex: 0x%.2lx\n", number);
+    sprintf(hex_str,"%.2lx", number);
+  } else if(number <= 0xffff) {
+    printf("hex: 0x%.4lx\n", number);
+    sprintf(hex_str,"%.4lx", number);
+  } else if(number <= 0xffffffff) {
+    printf("hex: 0x%.8lx\n", number);
+    sprintf(hex_str,"%.8lx", number);
+  } else if(number <= 0xffffffffffff) {
+    printf("hex: 0x%.12lx\n", number);
+    sprintf(hex_str,"%.12lx", number);
+  } else if(number <= 0xffffffffffffffff) {
+    printf("hex: 0x%.16lx\n", number);
+    sprintf(hex_str,"%.16lx", number);
+  }
+
   printf("oct: 0o%lo\n", number);
 
   printf("bin:");
 
-  char * hex_str = malloc(32);
-  sprintf(hex_str,"%lx", number);
  
   while(*hex_str != '\0')
   {
