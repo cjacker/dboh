@@ -6,6 +6,8 @@
 
 #include <limits.h>
 
+extern char * ascii_table[];
+
 int startsWith(const char *str, const char *pre)
 {
   size_t lenpre = strlen(pre), lenstr = strlen(str);
@@ -43,13 +45,33 @@ int main(int argc, char **argv)
   if(argc != 2 || startsWith(argv[1], "-"))
     usage();
 
-  //default base value.
+  // flag to conv ascii value to char or desc.
+  int asciiconv = 0;
+
+  // default base value.
   int base = 10;
   char *input = argv[1];
 
   unsigned long number = 0;
 
   char *next;
+ 
+  // convert chars to it's ascii value
+	if(strlen(input) > 1 && startsWith(input, "s")) {
+		chopN(input, 1);
+		printf("Input: ");
+		for( int i = 0; i < strlen(input); i++) {
+			printf("%c\t", input[i]);
+		}
+		printf("\n");
+    printf("ASCII: ");
+		for( int i = 0; i < strlen(input); i++) {
+			printf("%d\t", input[i], input[i]);
+		}
+		printf("\n");
+	  exit(0);
+  }
+
 
   if(strlen(input) > 2 && startsWith(input, "0b")) {
     chopN(input, 2);
@@ -66,12 +88,28 @@ int main(int argc, char **argv)
     base = 16;
   }
 
+  // convert ascii value to visible char or descriptions.
+  if(strlen(input) > 1 && startsWith(input, "a")) {
+    chopN(input, 1);
+    base = 10;
+	  asciiconv = 1;
+  }
+
   number = strtoul(input, &next, base);
 
   // if strtol failed
   if ((next == input) || (*next != '\0')) {
     fprintf(stderr, "invalid input\n");
     exit(1);
+  }
+
+  if(asciiconv) {
+	  if(number < 0 || number > 127) {
+	    printf("Your input %d is out of ascii range\n", number);
+	    exit(1);
+	  }
+    printf("%s\n", ascii_table[number]);
+	  exit(0);
   }
 
   printf("dec: %lu\n", number);
