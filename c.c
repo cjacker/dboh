@@ -6,6 +6,8 @@
 
 #include <limits.h>
 
+#define NAME "c"
+
 extern char * ascii_table[];
 
 int startsWith(const char *str, const char *pre)
@@ -34,9 +36,19 @@ const char * hex_to_bin_quad(unsigned char c)
 
 void usage()
 {
-  printf("dboh - number base converter\n");
-  printf("dboh <unsigned number>\n");
-  printf("    '0b' for binary, '0o' for octal, '0x' for hex. \n");
+  printf(NAME " - converter\n");
+  printf("\n");
+  printf("Number base:\n");
+  printf(NAME " <unsigned number>\n");
+  printf("    convert number between 2/8/10/16 base.\n");
+  printf("    '0b' for binary, '0o' for octal, '0x' for hex.\n");
+  printf("\n");
+  printf("ASCII:\n");
+  printf(NAME " a<number>\n");
+  printf("    convert ASCII value to visible char or descriptions.\n");
+  printf("\n");
+  printf(NAME " s<char or string>\n");
+  printf("    convert char or string to corresponding ASCII value.\n");
   exit(0);
 }
 
@@ -57,19 +69,19 @@ int main(int argc, char **argv)
   char *next;
  
   // convert chars to it's ascii value
-	if(strlen(input) > 1 && startsWith(input, "s")) {
-		chopN(input, 1);
-		printf("Input: ");
-		for( int i = 0; i < strlen(input); i++) {
-			printf("%c\t", input[i]);
-		}
-		printf("\n");
+  if(strlen(input) > 1 && startsWith(input, "s")) {
+    chopN(input, 1);
+    printf("Input: ");
+    for( int i = 0; i < strlen(input); i++) {
+      printf("%c\t", input[i]);
+    }
+    printf("\n");
     printf("ASCII: ");
-		for( int i = 0; i < strlen(input); i++) {
-			printf("%d\t", input[i], input[i]);
-		}
-		printf("\n");
-	  exit(0);
+    for( int i = 0; i < strlen(input); i++) {
+      printf("%d\t", input[i], input[i]);
+    }
+    printf("\n");
+    exit(0);
   }
 
 
@@ -100,16 +112,18 @@ int main(int argc, char **argv)
   // if strtol failed
   if ((next == input) || (*next != '\0')) {
     fprintf(stderr, "invalid input\n");
+    usage();
     exit(1);
   }
 
   if(asciiconv) {
-	  if(number < 0 || number > 127) {
-	    printf("Your input %d is out of ascii range\n", number);
-	    exit(1);
-	  }
+    if(number < 0 || number > 127) {
+      printf("Your input %d is out of ascii range\n", number);
+      usage();
+      exit(1);
+    }
     printf("%s\n", ascii_table[number]);
-	  exit(0);
+    exit(0);
   }
 
   printf("dec: %lu\n", number);
